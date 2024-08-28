@@ -13,12 +13,22 @@ class MainFunciton {
         this.parent;
 
         this.blocks = [];
+
+        this.width += textWidth(this.label)
     }
 
     drop(block) {
-        block.x = this.x + 10;
-        block.y = this.y + block.height * (this.blocks.length + 1);
+        let totalHeight = 0;
+        for (let i = 0; i < this.blocks.length; i++) {
+            totalHeight += this.blocks[i].height;
+        }
+
+        let x = this.x + 10;
+        let y = this.y + this.height + totalHeight;
+        block.move(x, y)
+
         this.blocks.push(block);
+        block.parent = this
     }
 
     display() {

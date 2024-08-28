@@ -10,11 +10,13 @@ class Block {
         this.blocks = [];
         this.action = action;
         this.parent;
+
+        this.width += textWidth(this.label)
     }
 
     move(x, y) {
-        this.x = x - this.width / 2;
-        this.y = y - this.height / 2;
+        this.x = x
+        this.y = y
     }
 
     drop() { }
