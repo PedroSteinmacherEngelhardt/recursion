@@ -3,7 +3,7 @@ class Block {
         this.x = x;
         this.y = y;
         this.width = w;
-        this._height = h;
+        this.height = h;
         this.label = label;
         this.isDragging = false;
         this.canMove = canMove;
@@ -14,29 +14,22 @@ class Block {
         this.width += textWidth(this.label)
     }
 
-    get height() { return this._height };
-
-    place(x, y) {
+    move(x, y) {
         this.x = x
         this.y = y
-    }
-
-    move(x, y) {
-        this.x += x;
-        this.y += y;
     }
 
     drop() { }
 
     display() {
         fill(200);
-        rect(this.x, this.y, this.width, this._height);
+        rect(this.x, this.y, this.width, this.height);
         fill(0);
-        text(this.label, this.x + 10, this.y + this._height / 2);
+        text(this.label, this.x + 10, this.y + this.height / 2);
     }
 
     isMouseInside() {
         return mouseX > this.x && mouseX < this.x + this.width &&
-            mouseY > this.y && mouseY < this.y + this._height;
+            mouseY > this.y && mouseY < this.y + this.height;
     }
 }

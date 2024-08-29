@@ -8,15 +8,15 @@ let nodes = []
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
-  blocks.push(new MainFunciton(500, 200, 20, 50, "contador(i)", false));
+  blocks.push(new Function(500, 200, 20, 50, "contador(i)", false));
   blocks.push(new If(500, 400, 20, 70, "if", true, () => "if"));
-  blocks.push(new Block(900, 400, 20, 50, "i > 10", true, (i) => { if (i > 10) return "end" }));
+  blocks.push(new Block(900, 400, 20, 50, "i <= 10", true, (i) => i <= 10));
   blocks.push(new Block(1200, 400, 20, 50, "contador(i + 1)", true, (i) => recursionPart(i)));
 
   let button = createButton('click me');
   button.position(0, 100);
 
-  button.mousePressed(() => { nodes = []; nodeX = 1200; nodeY = 400; repaint(0); print(nodes) });
+  button.mousePressed(() => { nodes = []; nodeX = 1200; nodeY = 400; repaint(0); });
 }
 
 let nodeX = 1200;
@@ -35,15 +35,10 @@ async function recursionPart(i) {
 
 function repaint(i) {
   let mainBlock = blocks.find(b => b.label == "contador(i)")
-
   for (let b of mainBlock.blocks) {
     let result = b.action.call(null, i);
-    if (result == "if") {
-      result = b.blocks[0].action.call(null, i)
-    }
     if (result == "end") return;
   }
-  console.log("end")
 }
 
 function draw() {
@@ -73,11 +68,18 @@ function mousePressed() {
       dragging = block;
 
       if (block.parent) {
-        let index = block.parent.blocks.indexOf(block);
-        if (index !== -1) {
-          block.parent.blocks.splice(index, 1);
-        }
+        block.parent.removeBlock(block);
       }
+
+      let index = blocks.indexOf(block);
+      blocks.splice(index, 1);
+      blocks.push(block);
+      if (block.condicion) {
+        let index = blocks.indexOf(block.condicion);
+        blocks.splice(index, 1);
+        blocks.push(block.condicion);
+      }
+
       break;
     }
   }
@@ -86,8 +88,8 @@ function mousePressed() {
 function mouseDragged() {
   if (dragging) {
     dragging.move(
-      mouseX - dragging.width / 2,
-      mouseY - dragging.height / 2
+      mouseX - dragging.width / 2 - dragging.x,
+      mouseY - dragging._height / 2 - dragging.y
     );
   }
   else {
@@ -103,11 +105,12 @@ function mouseReleased() {
   if (!dragging) return;
 
   for (let otherBlock of blocks.slice().reverse()) {
-    if (otherBlock == dragging) {
+    if (otherBlock == dragging || otherBlock == dragging.condicion) {
       continue;
     }
     if (otherBlock.isMouseInside()) {
       otherBlock.drop(dragging)
+      break;
     }
   }
 

@@ -1,4 +1,4 @@
-class MainFunciton {
+class Function {
     constructor(x, y, w, h, label, action) {
         this.x = x;
         this.y = y;
@@ -18,17 +18,32 @@ class MainFunciton {
     }
 
     drop(block) {
+        this.blocks.push(block);
+        this.positionBlocks()
+        block.parent = this
+    }
+
+    positionBlocks() {
         let totalHeight = 0;
         for (let i = 0; i < this.blocks.length; i++) {
+            let x = this.x + 10;
+            let y = this.y + this.height + totalHeight;
+            this.blocks[i].place(x, y)
             totalHeight += this.blocks[i].height;
         }
+        if (this.parent) {
+            this.parent.positionBlocks()
+        }
+    }
 
-        let x = this.x + 10;
-        let y = this.y + this.height + totalHeight;
-        block.move(x, y)
+    removeBlock(block) {
+        let index = this.blocks.indexOf(block);
 
-        this.blocks.push(block);
-        block.parent = this
+        if (index !== -1) {
+            this.blocks.splice(index, 1);
+        } else return;
+
+        this.positionBlocks()
     }
 
     display() {
