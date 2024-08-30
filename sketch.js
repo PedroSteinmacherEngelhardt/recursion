@@ -108,6 +108,11 @@ function mouseReleased() {
     if (otherBlock == dragging || otherBlock == dragging.condicion) {
       continue;
     }
+    if (otherBlock.parent) {
+      if (otherBlock == otherBlock.parent.condicion) {
+        continue
+      }
+    }
     if (otherBlock.isMouseInside()) {
       otherBlock.drop(dragging)
       break;
