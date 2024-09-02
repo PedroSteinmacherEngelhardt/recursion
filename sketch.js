@@ -47,6 +47,18 @@ function draw() {
     block.display();
   }
 
+  cursor(ARROW);
+  if (dragging) {
+    cursor(MOVE);
+  } else {
+    for (let block of blocks.slice().reverse()) {
+      if (block.isMouseInside() && block.canMove) {
+        cursor(HAND);
+        break;
+      }
+    }
+  }
+
   for (let n of nodes) {
     fill(255)
     ellipse(n.x, n.y, 20)
