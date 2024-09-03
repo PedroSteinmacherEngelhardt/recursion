@@ -1,4 +1,4 @@
-class Block {
+class BaseBlock {
     constructor(x, y, w, h, label, canMove = true, action) {
         this.x = x;
         this.y = y;
@@ -7,16 +7,22 @@ class Block {
         this.label = label;
         this.isDragging = false;
         this.canMove = canMove;
-        this.blocks = [];
         this.action = action;
         this.parent;
 
-        this.width += textWidth(this.label)
+        this.width += textWidth(this.label);
+    }
+
+    get totalHeight() { return this.height };
+
+    place(x, y) {
+        this.x = x;
+        this.y = y;
     }
 
     move(x, y) {
-        this.x = x
-        this.y = y
+        this.x += x;
+        this.y += y;
     }
 
     drop() { }

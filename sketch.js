@@ -8,10 +8,10 @@ let nodes = []
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
-  blocks.push(new Function(500, 200, 20, 50, "contador(i)", false));
-  blocks.push(new If(500, 400, 20, 70, "if", true, () => "if"));
-  blocks.push(new Block(900, 400, 20, 50, "i <= 10", true, (i) => i <= 10));
-  blocks.push(new Block(1200, 400, 20, 50, "contador(i + 1)", true, (i) => recursionPart(i)));
+  blocks.push(new FunctionBlock(500, 200, 20, 50, "contador(i)", true, () => print('hey')));
+  blocks.push(new CondicionalBlock(500, 400, 20, 70, "if", true, () => "if"));
+  blocks.push(new BaseBlock(900, 400, 20, 50, "i <= 10", true, (i) => i <= 10));
+  blocks.push(new BaseBlock(1200, 400, 20, 50, "contador(i + 1)", true, (i) => recursionPart(i)));
 
   let button = createButton('click me');
   button.position(0, 100);
@@ -35,8 +35,8 @@ async function recursionPart(i) {
 
 function repaint(i) {
   let mainBlock = blocks.find(b => b.label == "contador(i)")
-  for (let b of mainBlock.blocks) {
-    let result = b.action.call(null, i);
+  for (let b of mainBlock.children) {
+    let result = b.action(i);
     if (result == "end") return;
   }
 }
@@ -80,7 +80,8 @@ function mousePressed() {
       dragging = block;
 
       if (block.parent) {
-        block.parent.removeBlock(block);
+        block.parent.removeChild(block);
+        block.parent = null // important !!!
       }
 
       let index = blocks.indexOf(block);
@@ -101,7 +102,7 @@ function mouseDragged() {
   if (dragging) {
     dragging.move(
       mouseX - dragging.width / 2 - dragging.x,
-      mouseY - dragging._height / 2 - dragging.y
+      mouseY - dragging.height / 2 - dragging.y
     );
   }
   else {
