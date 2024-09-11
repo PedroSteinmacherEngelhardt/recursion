@@ -1,19 +1,20 @@
-class CondicionalBlock extends FunctionBlock {
+class ReturnBlock extends BaseBlock {
     constructor(x, y, w, h, label, canMove = true, action) {
-        super(x, y, w + 10, h, label, canMove, action);
+        super(x, y, w, h, label, canMove, action);
 
         this.condicion = null;
 
         this.action = (i) => {
-            if (!this.condicion) {
-                print("sem condicoes ...")
-                return "end"
+            if (this.condicion) {
+                return {
+                    type: "end",
+                    value: this.condicion.action(i),
+                }
             }
-            if (this.condicion.action(i)) {
-                for (let block of this.children) {
-                    let result = block.action(i);
-                    if (result)
-                        if (result.type == "end") return result.value
+            else {
+                return {
+                    type: "end",
+                    value: i,
                 }
             }
         };
@@ -40,7 +41,7 @@ class CondicionalBlock extends FunctionBlock {
 
     drop(block) {
         if (!this.condicion && !(block instanceof FunctionBlock)) { // CONDICION PROBABLY GONNA BREAK IN THE FUTURE !!!
-            let x = this.x + this.width - 10; // - 10 de margem
+            let x = this.x + this.width - 10;
             let y = this.y + (this.height - block.height) / 2;
             block.place(x, y);
 

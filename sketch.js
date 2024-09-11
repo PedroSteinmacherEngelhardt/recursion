@@ -1,6 +1,6 @@
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
-  setScreen(new Counter)
+  setScreen(new Fibonacci)
 }
 
 let nodeX = 1200;
