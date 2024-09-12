@@ -5,6 +5,7 @@ class ReturnBlock extends BaseBlock {
         this.condicion = null;
 
         this.action = (i) => {
+            print(i);
             if (this.condicion) {
                 return {
                     type: "end",
@@ -14,7 +15,7 @@ class ReturnBlock extends BaseBlock {
             else {
                 return {
                     type: "end",
-                    value: i,
+                    value: 1,
                 }
             }
         };

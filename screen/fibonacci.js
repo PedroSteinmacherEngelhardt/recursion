@@ -5,7 +5,7 @@ class Fibonacci extends Blocks {
         this.blocks.push(new ReturnBlock(500, 400, 20, 70, "return", true, () => "return"));
         this.blocks.push(new ReturnBlock(500, 400, 20, 70, "return", true, () => "return"));
         this.blocks.push(new BaseBlock(900, 400, 20, 50, "i <= 1", true, (i) => i <= 1));
-        this.blocks.push(new BaseBlock(1200, 400, 20, 50, "contador(i - 1) + contador(i - 2)", true, (i) => this.recursionPart(i - 1)));
+        this.blocks.push(new BaseBlock(1200, 400, 20, 50, "contador(i - 1) + contador(i - 2)", true, (i) => this.recursionPart(i - 1) + this.recursionPart(i - 2)));
 
         let button = createButton('click me');
         button.position(0, 100);
@@ -17,7 +17,8 @@ class Fibonacci extends Blocks {
         this.blocks[3].drop(this.blocks[5])
 
         button.mousePressed(() => {
-            this.nodes = []; nodeX = 1200; nodeY = 400; this.repaint(5);
+            this.nodes = []; nodeX = 1200; nodeY = 400;
+            this.repaint(10);
         });
     }
 
@@ -34,17 +35,18 @@ class Fibonacci extends Blocks {
             num: i,
         })
         nodeY -= 25;
-        await sleep(100);
-        this.repaint(i);
+        let a = this.repaint(i);
+        print(a)
+        return a
     }
 
     repaint(i) {
         let mainBlock = this.blocks.find(b => b.label == "contador(i)")
         for (let b of mainBlock.children) {
             let result = b.action(i);
-            print(b.label.condicion)
-            if (result)
-                if (result.type == "end") return result.value
+            if (result) {
+                return result.value
+            }
         }
     }
 
