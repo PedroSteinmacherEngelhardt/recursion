@@ -18,37 +18,25 @@ class Fibonacci extends Blocks {
 
         button.mousePressed(() => {
             this.nodes = []; nodeX = 1200; nodeY = 400;
-            this.repaint(10);
+            let x = this.repaint(10)
+            print(x);
         });
     }
 
-    fibonacci(n) {
-        if (n <= 1) return n;
-        return this.fibonacci(n - 1) + this.fibonacci(n - 2);
-    }
-
-
-    async recursionPart(i) {
-        this.nodes.push({
-            x: nodeX,
-            y: nodeY,
-            num: i,
-        })
-        nodeY -= 25;
-        let a = this.repaint(i);
-        print(a)
-        return a
+    recursionPart(i) {
+        let value = this.repaint(i);
+        return value
     }
 
     repaint(i) {
         let mainBlock = this.blocks.find(b => b.label == "contador(i)")
         for (let b of mainBlock.children) {
             let result = b.action(i);
-            if (result) {
+            if (result != undefined && result.type == "end") {
                 return result.value
             }
         }
+        return undefined;
     }
 
 }
-

@@ -5,17 +5,17 @@ class ReturnBlock extends BaseBlock {
         this.condicion = null;
 
         this.action = (i) => {
-            print(i);
             if (this.condicion) {
+                let result = this.condicion.action(i)
                 return {
                     type: "end",
-                    value: this.condicion.action(i),
+                    value: result,
                 }
             }
             else {
                 return {
                     type: "end",
-                    value: 1,
+                    value: i,
                 }
             }
         };

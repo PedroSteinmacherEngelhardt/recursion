@@ -7,13 +7,14 @@ class CondicionalBlock extends FunctionBlock {
         this.action = (i) => {
             if (!this.condicion) {
                 print("sem condicoes ...")
-                return "end"
+                return { type: "end", value: undefined }
             }
-            if (this.condicion.action(i)) {
+            else if (this.condicion.action(i)) {
                 for (let block of this.children) {
                     let result = block.action(i);
-                    if (result)
-                        if (result.type == "end") return result.value
+                    if (result != undefined && result.type == "end") {
+                        return result
+                    }
                 }
             }
         };
