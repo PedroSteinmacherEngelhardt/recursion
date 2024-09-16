@@ -4,8 +4,9 @@ class Fibonacci extends Blocks {
         this.blocks.push(new CondicionalBlock(500, 400, 20, 70, "if", true, () => "if"));
         this.blocks.push(new ReturnBlock(500, 400, 20, 70, "return", true, () => "return"));
         this.blocks.push(new ReturnBlock(500, 400, 20, 70, "return", true, () => "return"));
-        this.blocks.push(new BaseBlock(900, 400, 20, 50, "i <= 1", true, (i) => i <= 1));
-        this.blocks.push(new BaseBlock(1200, 400, 20, 50, "contador(i - 1) + contador(i - 2)", true, (i, x, y) => this.fibonacci(i, x, y)));
+        this.blocks.push(new BaseBlock(900, 400, 20, 50, "i <= 1", true, (i) => i.n <= 1));
+        this.blocks.push(new BaseBlock(1200, 400, 20, 50, "contador(i - 1) + contador(i - 2)", true, (params) => this.fibonacci(params)));
+        this.blocks.push(new BaseBlock(900, 400, 20, 50, "i", true, (i) => i.n));
 
         let button = createButton('click me');
         button.position(0, 100);
@@ -19,19 +20,19 @@ class Fibonacci extends Blocks {
         button.mousePressed(async () => {
             this.nodes = []; nodeX = 1200; nodeY = 400;
 
-            let x = await this.repaint(8, window.innerWidth / 2, window.innerHeight / 2)
+            let x = await this.repaint({ n: 8, x: window.innerWidth / 2, y: window.innerHeight / 2 })
 
             print(x);
         });
     }
 
-    async fibonacci(i, x, y) {
-        let value = await this.recursionPart(i - 1, x - 20, y - 30) + await this.recursionPart(i - 2, x + 20, y - 30)
+    async fibonacci(T) {
+        let value = await this.recursionPart({ n: T.n - 1, x: T.x - 20, y: T.y - 30 }) + await this.recursionPart({ n: T.n - 2, x: T.x + 20, y: T.y - 30 })
 
         this.nodes.push({
             num: value,
-            x: x,
-            y: y
+            x: T.x,
+            y: T.y
         })
 
         await sleep(100)
@@ -39,15 +40,15 @@ class Fibonacci extends Blocks {
         return value
     }
 
-    recursionPart(i, x, y) {
-        let value = this.repaint(i, x, y);
+    recursionPart(params) {
+        let value = this.repaint(params);
         return value
     }
 
-    repaint(i, x, y) {
+    repaint(params) {
         let mainBlock = this.blocks.find(b => b.label == "contador(i)")
         for (let b of mainBlock.children) {
-            let result = b.action(i, x, y);
+            let result = b.action(params);
             if (result != undefined && result.type == "end") {
                 return result.value
             }

@@ -4,9 +4,9 @@ class ReturnBlock extends BaseBlock {
 
         this.condicion = null;
 
-        this.action = (i, x, y) => {
+        this.action = (params) => {
             if (this.condicion) {
-                let result = this.condicion.action(i, x, y)
+                let result = this.condicion.action(params)
                 return {
                     type: "end",
                     value: result,
@@ -15,7 +15,7 @@ class ReturnBlock extends BaseBlock {
             else {
                 return {
                     type: "end",
-                    value: i,
+                    value: undefined,
                 }
             }
         };

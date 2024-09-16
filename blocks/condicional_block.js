@@ -4,14 +4,14 @@ class CondicionalBlock extends FunctionBlock {
 
         this.condicion = null;
 
-        this.action = (i) => {
+        this.action = (params) => {
             if (!this.condicion) {
                 print("sem condicoes ...")
                 return { type: "end", value: undefined }
             }
-            else if (this.condicion.action(i)) {
+            else if (this.condicion.action(params)) {
                 for (let block of this.children) {
-                    let result = block.action(i);
+                    let result = block.action(params);
                     if (result != undefined && result.type == "end") {
                         return result
                     }
