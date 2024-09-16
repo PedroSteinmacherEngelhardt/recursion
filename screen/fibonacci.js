@@ -1,20 +1,22 @@
 class Fibonacci extends Blocks {
     setup() {
-        this.blocks.push(new FunctionBlock(500, 200, 20, 50, "contador(i)", true, () => print('hey')));
+        this.blocks.push(new FunctionBlock(500, 200, 20, 50, "fibonacci(n)", true, () => print('hey')));
         this.blocks.push(new CondicionalBlock(500, 400, 20, 70, "if", true, () => "if"));
         this.blocks.push(new ReturnBlock(500, 400, 20, 70, "return", true, () => "return"));
         this.blocks.push(new ReturnBlock(500, 400, 20, 70, "return", true, () => "return"));
-        this.blocks.push(new BaseBlock(900, 400, 20, 50, "i <= 1", true, (i) => i.n <= 1));
-        this.blocks.push(new BaseBlock(1200, 400, 20, 50, "contador(i - 1) + contador(i - 2)", true, (params) => this.fibonacci(params)));
+        this.blocks.push(new BaseBlock(900, 400, 20, 50, "i <= 1", true, (n) => n.n <= 1));
+        this.blocks.push(new BaseBlock(1200, 400, 20, 50, "fibonacci(n - 1) + fibonacci(n - 2)", true, (params) => this.fibonacci(params)));
         this.blocks.push(new BaseBlock(900, 400, 20, 50, "i", true, (i) => i.n));
 
         let button = createButton('click me');
         button.position(0, 100);
 
-        this.blocks[0].drop(this.blocks[1]);
+        this.blocks[0].drop(this.blocks[1])
         this.blocks[1].drop(this.blocks[4])
         this.blocks[1].drop(this.blocks[2])
+        this.blocks[2].drop(this.blocks[6])
         this.blocks[0].drop(this.blocks[3])
+        this.blocks[6].drop(this.blocks[2])
         this.blocks[3].drop(this.blocks[5])
 
         button.mousePressed(async () => {
@@ -46,7 +48,7 @@ class Fibonacci extends Blocks {
     }
 
     repaint(params) {
-        let mainBlock = this.blocks.find(b => b.label == "contador(i)")
+        let mainBlock = this.blocks.find(b => b.label == "fibonacci(n)")
         for (let b of mainBlock.children) {
             let result = b.action(params);
             if (result != undefined && result.type == "end") {
