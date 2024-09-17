@@ -6,6 +6,7 @@ class Blocks {
     prevMouseY = 0
 
     nodes = []
+    lines = []
 
     draw() {
         background(200);
@@ -23,6 +24,10 @@ class Blocks {
                     break;
                 }
             }
+        }
+
+        for (let l of this.lines) {
+            line(l.x, l.y, l.x2, l.y2)
         }
 
         for (let n of this.nodes) {

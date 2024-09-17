@@ -6,7 +6,7 @@ class Fibonacci extends Blocks {
         this.blocks.push(new ReturnBlock(500, 400, 20, 70, "return", true, () => "return"));
         this.blocks.push(new BaseBlock(900, 400, 20, 50, "i <= 1", true, (n) => n.n <= 1));
         this.blocks.push(new BaseBlock(1200, 400, 20, 50, "fibonacci(n - 1) + fibonacci(n - 2)", true, (params) => this.fibonacci(params)));
-        this.blocks.push(new BaseBlock(900, 400, 20, 50, "i", true, (i) => i.n));
+        this.blocks.push(new BaseBlock(900, 400, 20, 50, "n", true, (n) => n.n));
 
         let button = createButton('click me');
         button.position(0, 100);
@@ -20,7 +20,7 @@ class Fibonacci extends Blocks {
         this.blocks[3].drop(this.blocks[5])
 
         button.mousePressed(async () => {
-            this.nodes = []; nodeX = 1200; nodeY = 400;
+            this.nodes = []; this.lines = []; nodeX = 1200; nodeY = 400;
 
             let x = await this.repaint({ n: 8, x: window.innerWidth / 2, y: window.innerHeight / 2 })
 
@@ -29,7 +29,24 @@ class Fibonacci extends Blocks {
     }
 
     async fibonacci(T) {
-        let value = await this.recursionPart({ n: T.n - 1, x: T.x - 20, y: T.y - 30 }) + await this.recursionPart({ n: T.n - 2, x: T.x + 20, y: T.y - 30 })
+        let value = await this.recursionPart({ n: T.n - 1, x: T.x - 20, y: T.y - 30, dir: -1 }) + await this.recursionPart({ n: T.n - 2, x: T.x + 20, y: T.y - 30, dir: 1 })
+
+        if (T.dir == 1) {
+            this.lines.push({
+                x: T.x,
+                y: T.y,
+                x2: T.x - 20,
+                y2: T.y + 30,
+            })
+        }
+        else if (T.dir == -1) {
+            this.lines.push({
+                x: T.x,
+                y: T.y,
+                x2: T.x + 20,
+                y2: T.y + 30,
+            })
+        }
 
         this.nodes.push({
             num: value,
