@@ -1,6 +1,6 @@
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
-  setScreen(new Fibonacci)
+  setScreen(new LevelSelector)
 }
 
 let nodeX = 1200;

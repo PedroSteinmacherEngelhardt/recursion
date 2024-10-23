@@ -63,7 +63,8 @@ class FunctionBlock extends BaseBlock {
         fill(250, 40, 40);
         rect(this.x, this.y, this.width, this.height);
         fill(0);
-        text(this.label, this.x + 10, this.y + this.height / 2);
+        textAlign(CENTER, CENTER);
+        text(this.label, this.x + this.width / 2, this.y + this.height / 2);
     }
 
     isMouseInside() {

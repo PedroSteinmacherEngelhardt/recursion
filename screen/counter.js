@@ -14,6 +14,12 @@ class Counter extends Blocks {
         });
     }
 
+    draw() {
+        super.draw()
+
+        drawBackButton()
+    }
+
     async recursionPart(i) {
         this.nodes.push({
             x: nodeX,

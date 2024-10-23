@@ -21,7 +21,9 @@ class ReturnBlock extends BaseBlock {
         };
 
         this.width += textWidth(this.label)
+        this.labelWidth = textWidth(this.label)
     }
+
 
     place(x, y) {
         if (this.condicion) {
@@ -72,7 +74,8 @@ class ReturnBlock extends BaseBlock {
         fill(200);
         rect(this.x, this.y, this.width, this.height);
         fill(0);
-        text(this.label, this.x + 10, this.y + this.height / 2);
+        textAlign(CENTER, CENTER);
+        text(this.label, this.x + this.labelWidth, this.y + this.height / 2);
     }
 
     isMouseInside() {

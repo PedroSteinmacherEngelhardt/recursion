@@ -4,7 +4,7 @@ class Fibonacci extends Blocks {
         this.blocks.push(new CondicionalBlock(500, 400, 20, 70, "if", true, () => "if"));
         this.blocks.push(new ReturnBlock(500, 400, 20, 70, "return", true, () => "return"));
         this.blocks.push(new ReturnBlock(500, 400, 20, 70, "return", true, () => "return"));
-        this.blocks.push(new BaseBlock(900, 400, 20, 50, "i <= 1", true, (n) => n.n <= 1));
+        this.blocks.push(new BaseBlock(900, 400, 20, 50, "n <= 1", true, (n) => n.n <= 1));
         this.blocks.push(new BaseBlock(1200, 400, 20, 50, "fibonacci(n - 1) + fibonacci(n - 2)", true, (params) => this.fibonacci(params)));
         this.blocks.push(new BaseBlock(900, 400, 20, 50, "n", true, (n) => n.n));
 
@@ -26,6 +26,12 @@ class Fibonacci extends Blocks {
 
             print(x);
         });
+    }
+
+    draw() {
+        super.draw()
+
+        drawBackButton()
     }
 
     async fibonacci(T) {
