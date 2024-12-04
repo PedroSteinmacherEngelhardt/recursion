@@ -1,7 +1,8 @@
 let currentScreen;
 
-async function setScreen(newScreen) {
-    await sleep(100)
+async function setScreen(newScreen, _showDisplayCanvas = true) {
+    circles = {}
+    showDisplayCanvas = _showDisplayCanvas
     currentScreen = newScreen;
     if (newScreen.setup)
         newScreen.setup();
@@ -30,4 +31,8 @@ function drawBackButton() {
 
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function generateUUID() {
+    return crypto.randomUUID();
 }

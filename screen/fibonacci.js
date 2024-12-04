@@ -20,9 +20,9 @@ class Fibonacci extends Blocks {
         this.blocks[3].drop(this.blocks[5])
 
         button.mousePressed(async () => {
-            this.nodes = []; this.lines = []; nodeX = 1200; nodeY = 400;
+            circles = {};
 
-            let x = await this.repaint({ n: 8, x: window.innerWidth / 2, y: window.innerHeight / 2 })
+            let x = await this.repaint({ n: 8, x: cnvSize.width / 2, y: cnvSize.height / 2 })
 
             print(x);
         });
@@ -35,30 +35,23 @@ class Fibonacci extends Blocks {
     }
 
     async fibonacci(T) {
-        let value = await this.recursionPart({ n: T.n - 1, x: T.x - 20, y: T.y - 30, dir: -1 }) + await this.recursionPart({ n: T.n - 2, x: T.x + 20, y: T.y - 30, dir: 1 })
-
-        if (T.dir == 1) {
-            this.lines.push({
-                x: T.x,
-                y: T.y,
-                x2: T.x - 20,
-                y2: T.y + 30,
-            })
-        }
-        else if (T.dir == -1) {
-            this.lines.push({
-                x: T.x,
-                y: T.y,
-                x2: T.x + 20,
-                y2: T.y + 30,
-            })
-        }
-
-        this.nodes.push({
-            num: value,
+        const uuid = generateUUID()
+        circles[uuid] = {
+            i: 0,
+            pos: createVector(T.x, T.y),
+            velocity: createVector(0, 0),
             x: T.x,
-            y: T.y
-        })
+            y: T.y,
+            neighbors: [],
+            hide: true
+        }
+
+        let value = await this.recursionPart({ n: T.n - 1, x: T.x - 70, y: T.y - 100, neighbor: uuid }) + await this.recursionPart({ n: T.n - 2, x: T.x + 70, y: T.y - 100, neighbor: uuid })
+
+        circles[uuid].hide = false
+        circles[uuid].i = value
+        if (circles[T.neighbor])
+            circles[T.neighbor].neighbors.push(uuid)
 
         await sleep(100)
 

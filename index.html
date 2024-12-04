@@ -11,18 +11,31 @@
 
   <script src="libraries/p5.min.js"></script>
   <script src="libraries/p5.sound.min.js"></script>
+  <script language="javascript" type="text/javascript" src="graph.js"></script>
   <script language="javascript" type="text/javascript" src="util.js"></script>
   <script language="javascript" type="text/javascript" src="blocks/base_block.js"></script>
   <script language="javascript" type="text/javascript" src="blocks/function_block.js"></script>
   <script language="javascript" type="text/javascript" src="blocks/condicional_block.js"></script>
   <script language="javascript" type="text/javascript" src="blocks/return_block.js"></script>
+  <script language="javascript" type="text/javascript" src="blocks/loop_block.js"></script>
+  <script language="javascript" type="text/javascript" src="blocks/shadow_block.js"></script>
   <script language="javascript" type="text/javascript" src="screen/blocks.js"></script>
   <script language="javascript" type="text/javascript" src="screen/counter.js"></script>
   <script language="javascript" type="text/javascript" src="screen/fibonacci.js"></script>
+  <script language="javascript" type="text/javascript" src="screen/pre_order.js"></script>
   <script language="javascript" type="text/javascript" src="screen/level_selector.js"></script>
+  <script language="javascript" type="text/javascript" src="display_canvas.js"></script>
+
 </head>
 
 <body>
+  <div class="dialogbox" id="dialog" onclick="passDialog()">
+    <div class="dialogcontent" id="dialogcontent"></div>
+    <div style="display: flex;justify-content: space-between;">
+      <div class="arrow-left" onclick="goBackDialog()"></div>
+      <div class="arrow-right" onclick="passDialog()"></div>
+    </div>
+  </div>
   <script src="sketch.js"></script>
 
 </body>

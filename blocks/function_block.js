@@ -31,6 +31,12 @@ class FunctionBlock extends BaseBlock {
     }
 
     drop(block) {
+        if (block.isShadow) {
+            let x = this.x + 10;
+            let y = this.y + this.totalHeight;
+            block.place(x, y)
+            return
+        }
         this.children.push(block);
         this.repositionChildren()
         block.parent = this

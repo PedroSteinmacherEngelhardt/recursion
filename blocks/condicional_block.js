@@ -46,8 +46,8 @@ class CondicionalBlock extends FunctionBlock {
             let y = this.y + (this.height - block.height) / 2;
             block.place(x, y);
 
+            if (block.isShadow) { return }
             this.width += block.width;
-
             this.condicion = block;
             block.parent = this;
 

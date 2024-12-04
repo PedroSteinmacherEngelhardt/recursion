@@ -1,10 +1,10 @@
 class LevelSelector {
-
     setup() {
-        background(200)
+
     }
 
     draw() {
+        clear()
         fill(0);
         textSize(32);
         textAlign(CENTER, CENTER);
@@ -14,7 +14,7 @@ class LevelSelector {
 
         this.drawButton("Fase 2", width / 2 - 100, 220, () => setScreen(new Fibonacci));
 
-        //this.drawButton("Fase 3", width / 2 - 100, 290, () => currentScreen = 'fase3');
+        this.drawButton("Fase 2", width / 2 - 100, 290, () => setScreen(new PreOrder));
     }
 
     drawButton(label, x, y, onClick) {

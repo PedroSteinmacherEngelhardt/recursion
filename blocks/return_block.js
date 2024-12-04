@@ -48,8 +48,9 @@ class ReturnBlock extends BaseBlock {
             let y = this.y + (this.height - block.height) / 2;
             block.place(x, y);
 
-            this.width += block.width;
+            if (block.isShadow) { return }
 
+            this.width += block.width;
             this.condicion = block;
             block.parent = this;
 

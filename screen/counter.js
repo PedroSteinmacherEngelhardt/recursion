@@ -9,25 +9,29 @@ class Counter extends Blocks {
         button.position(0, 100);
 
         button.mousePressed(() => {
-            //setScreen(new Menu)
-            this.nodes = []; nodeX = 1200; nodeY = 400; this.repaint(0);
+            circles = {}; nodeX = 1200; nodeY = 400; this.repaint(0);
         });
     }
 
     draw() {
         super.draw()
-
         drawBackButton()
     }
 
     async recursionPart(i) {
-        this.nodes.push({
-            x: nodeX,
-            y: nodeY,
-            num: i,
-        })
-        nodeY -= 25;
-        await sleep(100);
+        const circleLenght = Object.keys(circles).length
+        const Xoffset = cnvSize.width / 2
+        circles[i] = {
+            pos: createVector(Xoffset + 1 * circleLenght, 170 * circleLenght + 20),
+            i: i,
+            velocity: createVector(0, 0),
+            angle: 0,
+            neighbors: []
+        }
+        if (circles[i - 1]) {
+            circles[i - 1].neighbors.push(i)
+        }
+        await sleep(350);
         this.repaint(i + 1);
     }
 

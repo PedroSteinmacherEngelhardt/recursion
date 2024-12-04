@@ -8,10 +8,26 @@ class Blocks {
     nodes = []
     lines = []
 
+    shadowBlock = new ShadowBlock()
+
     draw() {
-        background(200);
+        clear();
         for (let block of this.blocks) {
             block.display();
+        }
+
+        if (!this.shadowBlock.hide) {
+            this.shadowBlock.display()
+        }
+
+        if (this.dragging) {
+            this.dragging.display()
+            if (this.dragging.condicion) {
+                this.dragging.condicion.display()
+            }
+            if (this.dragging.children) {
+                for (const b of this.dragging.children) { b.display() }
+            }
         }
 
         cursor(ARROW);
@@ -30,18 +46,11 @@ class Blocks {
             line(l.x, l.y, l.x2, l.y2)
         }
 
-        for (let n of this.nodes) {
-            fill(255)
-            ellipse(n.x, n.y, 20)
-            fill(0)
-            text(n.num, n.x - 5, n.y + 5)
-        }
-
         this.prevMouseX = mouseX;
         this.prevMouseY = mouseY;
 
         let fps = frameRate();
-        text(fps, 50, 50);
+        text(fps, 120, 50);
     }
 
     mousePressed() {
@@ -82,9 +91,32 @@ class Blocks {
                 block.y -= this.prevMouseY - mouseY
             }
         }
+
+        if (this.dragging) {
+            for (let otherBlock of this.blocks.slice().reverse()) {
+                if (otherBlock == this.dragging || otherBlock == this.dragging.condicion) {
+                    continue;
+                }
+                if (otherBlock.parent) {
+                    if (otherBlock == otherBlock.parent.condicion) {
+                        continue
+                    }
+                }
+                if (otherBlock.isMouseInside()) {
+                    if (otherBlock.drop) {
+                        otherBlock.drop(this.shadowBlock)
+                        this.shadowBlock.hide = false
+                    }
+                    break;
+                } else {
+                    this.shadowBlock.hide = true
+                }
+            }
+        }
     }
 
     mouseReleased() {
+        this.shadowBlock.hide = true
         if (!this.dragging) return;
 
         for (let otherBlock of this.blocks.slice().reverse()) {
@@ -97,7 +129,9 @@ class Blocks {
                 }
             }
             if (otherBlock.isMouseInside()) {
-                otherBlock.drop(this.dragging)
+                if (otherBlock.drop) {
+                    otherBlock.drop(this.dragging)
+                }
                 break;
             }
         }

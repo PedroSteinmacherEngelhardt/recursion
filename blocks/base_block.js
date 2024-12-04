@@ -25,8 +25,6 @@ class BaseBlock {
         this.y += y;
     }
 
-    drop() { }
-
     display() {
         fill(200);
         rect(this.x, this.y, this.width, this.height);
