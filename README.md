@@ -39,7 +39,5 @@ O objetivo principal do projeto é desmistificar a recursão, um conceito desafi
 
 ## Deploy
 
-### Configurações de Pré-Deploy
-
 #Acesse o jogo
 https://pedrosteinmacherengelhardt.github.io/recursion/
