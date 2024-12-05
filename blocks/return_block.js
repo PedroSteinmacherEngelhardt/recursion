@@ -55,7 +55,7 @@ class ReturnBlock extends BaseBlock {
             block.parent = this;
 
         } else {
-            super.drop(block)
+            if (block.isShadow) { block.hide = true }
         }
 
     }

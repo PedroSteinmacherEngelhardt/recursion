@@ -1,6 +1,6 @@
 let currentScreen;
 
-async function setScreen(newScreen, _showDisplayCanvas = true) {
+function setScreen(newScreen, _showDisplayCanvas = true) {
     circles = {}
     showDisplayCanvas = _showDisplayCanvas
     currentScreen = newScreen;
@@ -8,25 +8,34 @@ async function setScreen(newScreen, _showDisplayCanvas = true) {
         newScreen.setup();
 }
 
-function drawBackButton() {
-    const x = width / 2 - 100
-    const y = height - 100
+function goToLevel(level) {
+    offset = createVector(0, 0)
+    circles = {}
+    showDisplayCanvas = true
+    currentScreen = level;
+    menuContainer.style.display = "none";
+    dialogBox.style.display = "block";
 
-    fill(100);
-    if (mouseX > x && mouseX < x + 200 &&
-        mouseY > y && mouseY < y + 50) {
-        fill(70);
-        if (mouseIsPressed) {
-            setScreen(new LevelSelector)
-        }
-
+    if (currentScreen.setup) {
+        currentScreen.setup();
     }
-    rect(x, y, 200, 50, 10);
+}
 
-    fill(255);
-    textAlign(CENTER, CENTER);
-    textSize(24);
-    text("voltar", x + 100, y + 25);
+function goToMenu() {
+    menuContainer.style.display = "block";
+    dialogBox.style.display = "none";
+    currentScreen.blocks = []
+    setScreen(new LevelSelector, false)
+}
+
+function level() {
+    startMenu.style.display = "none";
+    levelSelectorMenu.style.display = "block";
+}
+
+function menu() {
+    startMenu.style.display = "block";
+    levelSelectorMenu.style.display = "none";
 }
 
 async function sleep(ms) {
@@ -35,4 +44,32 @@ async function sleep(ms) {
 
 function generateUUID() {
     return crypto.randomUUID();
+}
+
+function setDialog(newDialog = []) {
+    dialog = newDialog
+    dialogIndex = 0
+    dialogCount.innerText = dialogIndex + 1 + "/" + dialog.length
+    dialogContent.innerHTML = dialog[dialogIndex]
+    dialogBox.style.cursor = 'pointer';
+}
+
+function passDialog() {
+    event.stopPropagation();
+    if (dialogIndex + 1 > dialog.length - 1) {
+        return
+    }
+    dialogIndex += 1
+    dialogCount.innerText = dialogIndex + 1 + "/" + dialog.length
+    dialogContent.innerHTML = dialog[dialogIndex]
+}
+
+function goBackDialog() {
+    event.stopPropagation();
+    if (dialogIndex - 1 < 0) {
+        return
+    }
+    dialogIndex -= 1
+    dialogCount.innerText = dialogIndex + 1 + "/" + dialog.length
+    dialogContent.innerHTML = dialog[dialogIndex]
 }

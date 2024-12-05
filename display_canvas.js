@@ -36,11 +36,6 @@ function sketch1(p) {
         lastMousePos = p.createVector(0, 0)
         offset = p.createVector(0, 0)
 
-        let button = p.createButton('add');
-        button.position(p.width / 2, p.height + 10);
-
-        button.mousePressed(addNode);
-
     }
 
     p.draw = function () {
@@ -66,13 +61,15 @@ function sketch1(p) {
 
         for (const [_, c] of Object.entries(circles)) {
             if (c.hide) continue
-
+            p.strokeWeight(3);
             p.fill(255);
             if (c == selected) {
                 p.fill(0)
             }
             p.circle(c.pos.x, c.pos.y, diametro)
             p.fill(0)
+            p.textSize(14);
+            p.textStyle(BOLD);
             p.text(c.i, c.pos.x, c.pos.y)
 
             c.pos.add(c.velocity)
@@ -168,21 +165,6 @@ function sketch1(p) {
         dragging = undefined
         p.lastMousePos = p.createVector(0, 0)
     }
-
-    function addNode() {
-        circles = {}
-        Object.entries(graph).forEach(([key, value]) => {
-            circles[key] = {
-                i: 0,
-                pos: p.createVector(value.pos.x, value.pos.y),
-                velocity: p.createVector(0, 0),
-                neighbors: value.neighbors
-            }
-        });
-        //saveJSON(circles, "data")
-    }
-
-
 }
 
 window.addEventListener("wheel", function (e) {

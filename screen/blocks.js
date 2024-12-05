@@ -5,12 +5,30 @@ class Blocks {
     prevMouseX = 0
     prevMouseY = 0
 
-    nodes = []
-    lines = []
-
     shadowBlock = new ShadowBlock()
+    actionButton
+    goBackButton
+
+    setup(doButtons = false) {
+        if (!doButtons) { return }
+        this.actionButton = createButton('Executar função');
+        this.actionButton.position(cnvPosition.x, height * 0.7);
+
+        this.goBackButton = createButton('voltar');
+        this.goBackButton.position(cnvPosition.x + cnvSize.width - 100, height * 0.7);
+
+        this.goBackButton.mousePressed(() => {
+            this.goBackButton.remove()
+            this.actionButton.remove()
+            goToMenu()
+        });
+    }
 
     draw() {
+        textAlign(CENTER, CENTER);
+        stroke(0);
+        strokeWeight(1);
+        textSize(24);
         clear();
         for (let block of this.blocks) {
             block.display();
@@ -42,15 +60,9 @@ class Blocks {
             }
         }
 
-        for (let l of this.lines) {
-            line(l.x, l.y, l.x2, l.y2)
-        }
 
         this.prevMouseX = mouseX;
         this.prevMouseY = mouseY;
-
-        let fps = frameRate();
-        text(fps, 120, 50);
     }
 
     mousePressed() {
@@ -104,8 +116,8 @@ class Blocks {
                 }
                 if (otherBlock.isMouseInside()) {
                     if (otherBlock.drop) {
-                        otherBlock.drop(this.shadowBlock)
                         this.shadowBlock.hide = false
+                        otherBlock.drop(this.shadowBlock)
                     }
                     break;
                 } else {

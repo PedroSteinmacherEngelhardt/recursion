@@ -1,37 +1,29 @@
 class LevelSelector {
-    setup() {
+    setup() { clear(); angleMode(DEGREES); }
 
-    }
+    symmetry = 6;
+
+    angle = 360 / this.symmetry;
 
     draw() {
-        clear()
-        fill(0);
-        textSize(32);
-        textAlign(CENTER, CENTER);
-        text("Selecione uma fase", width / 2, 80);
+        translate(window.innerWidth / 2, window.innerHeight / 2);
+        if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
 
-        this.drawButton("Fase 1", width / 2 - 100, 150, () => setScreen(new Counter));
+            let lineStartX = mouseX - width / 2;
+            let lineStartY = mouseY - height / 2;
+            let lineEndX = pmouseX - width / 2;
+            let lineEndY = pmouseY - height / 2;
 
-        this.drawButton("Fase 2", width / 2 - 100, 220, () => setScreen(new Fibonacci));
-
-        this.drawButton("Fase 2", width / 2 - 100, 290, () => setScreen(new PreOrder));
-    }
-
-    drawButton(label, x, y, onClick) {
-        fill(100);
-        if (mouseX > x && mouseX < x + 200 &&
-            mouseY > y && mouseY < y + 50) {
-            fill(70);
-            if (mouseIsPressed) {
-                onClick();
+            for (let i = 0; i < this.symmetry; i++) {
+                rotate(this.angle);
+                stroke(255);
+                strokeWeight(3);
+                line(lineStartX, lineStartY, lineEndX, lineEndY);
+                push();
+                scale(1, -1);
+                line(lineStartX, lineStartY, lineEndX, lineEndY);
+                pop();
             }
-
         }
-        rect(x, y, 200, 50, 10);
-
-        fill(255);
-        textAlign(CENTER, CENTER);
-        textSize(24);
-        text(label, x + 100, y + 25);
     }
 }
