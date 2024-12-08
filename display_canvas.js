@@ -8,6 +8,7 @@ const curveLimit = 40
 
 let cnvPosition = { x: window.innerWidth - window.innerWidth / 3 - 100, y: window.innerHeight * 0.05 }
 let cnvSize = { width: window.innerWidth / 3, height: window.innerHeight / 2 }
+let displayCnv
 
 const isInsedeDisplayCnv = () => mouseX > cnvPosition.x && mouseX < cnvPosition.x + cnvSize.width && mouseY > cnvPosition.y && mouseY < cnvPosition.y + cnvSize.height
 let showDisplayCanvas = false
@@ -25,8 +26,18 @@ function isInsideCircle(p1, p2, r = diametro / 2) {
 }
 
 function sketch1(p) {
+    let cnv
+    p.windowResized = function () {
+        cnvPosition = { x: windowWidth - windowWidth / 3 - 100, y: windowHeight * 0.05 }
+        cnvSize = { width: windowWidth / 3, height: windowHeight / 2 }
+
+        canvasOffset = p.createVector(cnvPosition.x, cnvPosition.y)
+        p.resizeCanvas(cnvSize.width, cnvSize.height)
+        cnv.position(cnvPosition.x, cnvPosition.y)
+    }
+
     p.setup = function () {
-        let cnv = p.createCanvas(cnvSize.width, cnvSize.height);
+        cnv = p.createCanvas(cnvSize.width, cnvSize.height);
         cnv.position(cnvPosition.x, cnvPosition.y)
 
         canvasOffset = p.createVector(cnvPosition.x, cnvPosition.y)
@@ -79,7 +90,7 @@ function sketch1(p) {
         for (const [_, c] of Object.entries(circles)) {
             for (const [_, otherC] of Object.entries(circles)) {
                 const d = p5.Vector.sub(c.pos, otherC.pos)
-                if (d.mag() < 130) {
+                if (d.mag() < 80) {
                     d.normalize().mult(1)
                     c.velocity.add(d)
                     otherC.velocity.add(d.mult(-1))
@@ -88,7 +99,7 @@ function sketch1(p) {
         }
 
         for (const [i, c] of Object.entries(circles).reverse()) {
-            for (let neighbor of c.neighbors) {
+            for (let neighbor of [...c.neighbors, c.parent]) {
                 if (!circles[neighbor]) continue
                 let force = p5.Vector.sub(circles[i].pos, circles[neighbor].pos)
                 let x = force.mag() - restLength
@@ -98,14 +109,8 @@ function sketch1(p) {
                 circles[i].velocity.add(force)
                 circles[neighbor].velocity.add(force.mult(-1))
 
-                let theList = c.neighbors
-
-                for (let o of theList) {
-                    theList.concat(circles[o].neighbors)
-                }
-
-                for (let otherNeighbor of theList) {
-                    if (circles[otherNeighbor] === circles[neighbor]) continue
+                for (let otherNeighbor of [...c.neighbors, c.parent]) {
+                    if (circles[otherNeighbor] === circles[neighbor] || !circles[otherNeighbor]) continue
                     const p1 = p5.Vector.sub(circles[neighbor].pos, c.pos)
                     const p2 = p5.Vector.sub(circles[otherNeighbor].pos, c.pos)
                     const angle1 = p1.angleBetween(p.createVector(1, 0))
@@ -115,7 +120,7 @@ function sketch1(p) {
                         angleDir = 0
                     }
 
-                    if (p.abs(p1.angleBetween(p2)) < 90 / (c.neighbors.length - 1)) {
+                    if (p.abs(p1.angleBetween(p2)) < 80 - ([...c.neighbors, c.parent].length) - 1) {
                         const a = p.createVector(p.sin(angle2 + angleDir), p.cos(angle2 + angleDir))
                         const b = p.createVector(p.sin(angle1 + 180 - angleDir), p.cos(angle1 + 180 - angleDir))
                         a.mult(restLength)

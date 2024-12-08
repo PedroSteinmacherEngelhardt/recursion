@@ -45,12 +45,16 @@ class Fibonacci extends Blocks {
             hide: true
         }
 
-        let value = await this.recursionPart({ n: T.n - 1, x: T.x - 70, y: T.y - 100, neighbor: uuid }) + await this.recursionPart({ n: T.n - 2, x: T.x + 70, y: T.y - 100, neighbor: uuid })
+        let value = await this.recursionPart({ n: T.n - 1, x: T.x - 70, y: T.y - 100, parent: uuid }) + await this.recursionPart({ n: T.n - 2, x: T.x + 70, y: T.y - 100, parent: uuid })
 
         circles[uuid].hide = false
         circles[uuid].i = value
-        if (circles[T.neighbor])
-            circles[T.neighbor].neighbors.push(uuid)
+        if (T.parent) {
+            circles[uuid].parent = T.parent
+        }
+        if (circles[T.parent]) {
+            circles[T.parent].neighbors.push(uuid)
+        }
 
         await sleep(100)
 

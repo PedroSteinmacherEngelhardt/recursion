@@ -25,12 +25,12 @@ class Counter extends Blocks {
             pos: createVector(Xoffset + 1 * circleLenght, 170 * circleLenght + 20),
             i: i,
             velocity: createVector(0, 0),
-            angle: 0,
             neighbors: []
         }
         if (circles[i - 1]) {
             circles[i - 1].neighbors.push(i)
         }
+        circles[i].parent = i - 1
         await sleep(350);
         this.repaint(i + 1);
     }
