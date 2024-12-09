@@ -1,6 +1,7 @@
 class Counter extends Blocks {
     setup() {
         this.blocks.push(new FunctionBlock(500, 200, 20, 50, "contador(i)", true, () => print('hey')));
+        this.mainBlock = this.blocks[0]
         this.blocks.push(new CondicionalBlock(500, 400, 20, 70, "if", true, () => "if"));
         this.blocks.push(new BaseBlock(900, 400, 20, 50, "i <= 10", true, (i) => i <= 10));
         this.blocks.push(new BaseBlock(1200, 400, 20, 50, "contador(i + 1)", true, (i) => this.recursionPart(i)));
@@ -33,14 +34,6 @@ class Counter extends Blocks {
         circles[i].parent = i - 1
         await sleep(350);
         this.repaint(i + 1);
-    }
-
-    repaint(i) {
-        let mainBlock = this.blocks.find(b => b.label == "contador(i)")
-        for (let b of mainBlock.children) {
-            let result = b.action(i);
-            if (result == "end") return;
-        }
     }
 
     dialog = [

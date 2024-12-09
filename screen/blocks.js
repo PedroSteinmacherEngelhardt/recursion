@@ -1,6 +1,7 @@
 class Blocks {
     blocks = [];
     dragging = null;
+    mainBlock
 
     prevMouseX = 0
     prevMouseY = 0
@@ -150,6 +151,16 @@ class Blocks {
 
         this.dragging.isDragging = false;
         this.dragging = null;
+    }
+
+    async repaint(params) {
+        for (let b of this.mainBlock.children) {
+            let result = await b.action(params);
+            if (result != undefined && result.type == "end") {
+                return result.value
+            }
+        }
+        return undefined;
     }
 }
 

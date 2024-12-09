@@ -2,6 +2,7 @@ class FibonacciMemo extends Blocks {
     memo = {}
     setup() {
         this.blocks.push(new FunctionBlock(500, 200, 20, 50, "fibonacci(n)", true, () => print('hey')));
+        this.mainBlock = this.blocks[0]
         this.blocks.push(new CondicionalBlock(500, 400, 20, 70, "if", true, () => "if"));
         this.blocks.push(new ReturnBlock(500, 400, 20, 70, "return", true, () => "return"));
         this.blocks.push(new ReturnBlock(500, 400, 20, 70, "return", true, () => "return"));
@@ -65,17 +66,6 @@ class FibonacciMemo extends Blocks {
     recursionPart(params) {
         let value = this.repaint(params);
         return value
-    }
-
-    repaint(params) {
-        let mainBlock = this.blocks.find(b => b.label == "fibonacci(n)")
-        for (let b of mainBlock.children) {
-            let result = b.action(params);
-            if (result != undefined && result.type == "end") {
-                return result.value
-            }
-        }
-        return undefined;
     }
 
 }
