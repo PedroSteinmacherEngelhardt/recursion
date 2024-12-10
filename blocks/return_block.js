@@ -44,17 +44,23 @@ class ReturnBlock extends BaseBlock {
     }
 
     drop(block) {
-        if (!this.condicion && (block.constructor === BaseBlock || block.constructor === ShadowBlock)) {
+        if (!this.condicion && (block.constructor === BaseBlock || (block.constructor === ShadowBlock && draggingBlock.constructor === BaseBlock))) {
             let x = this.x + this.width - 10;
             let y = this.y + (this.height - block.height) / 2;
             block.place(x, y);
 
-            if (block.isShadow) { return }
+            if (block.isShadow) {
+                return
+            }
 
             this.width += block.width;
             this.condicion = block;
             block.parent = this;
             this.canDrop = false
+        } else {
+            if (block.isShadow) {
+                //block.hide = true
+            }
         }
 
     }

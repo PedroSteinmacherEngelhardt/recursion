@@ -9,17 +9,17 @@ class Fibonacci extends Blocks {
         this.blocks.push(new BaseBlock(1200, 400, 20, 50, "fibonacci(n - 1) + fibonacci(n - 2)", true, (params) => this.fibonacci(params)));
         this.blocks.push(new BaseBlock(900, 400, 20, 50, "n", true, (n) => n.n));
 
-        this.blocks[0].drop(this.blocks[1])
+        /* this.blocks[0].drop(this.blocks[1])
         this.blocks[1].drop(this.blocks[4])
         this.blocks[1].drop(this.blocks[2])
         this.blocks[2].drop(this.blocks[6])
         this.blocks[0].drop(this.blocks[3])
-        //this.blocks[6].drop(this.blocks[2])
-        this.blocks[3].drop(this.blocks[5])
+        this.blocks[3].drop(this.blocks[5]) */
 
         super.setup(true)
 
         this.actionButton.mousePressed(async () => {
+            this.iterations = 0
             circles = {};
 
             let x = await this.repaint({ n: 8, x: cnvSize.width / 2, y: cnvSize.height / 2 })

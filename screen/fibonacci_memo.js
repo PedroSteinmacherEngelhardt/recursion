@@ -25,6 +25,7 @@ class FibonacciMemo extends Blocks {
         super.setup(true)
 
         this.actionButton.mousePressed(async () => {
+            this.iterations = 0
             circles = {};
             this.memo = {}
 

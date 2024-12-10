@@ -19,6 +19,7 @@ class PreOrder extends Blocks {
         super.setup(true)
 
         this.actionButton.mousePressed(() => {
+            this.iterations = 0
             this.recursionPart(circles["0"]);
         });
 

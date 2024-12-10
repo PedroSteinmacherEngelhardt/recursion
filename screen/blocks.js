@@ -10,6 +10,8 @@ class Blocks {
     actionButton
     goBackButton
 
+    iterations = 0
+
     setup(doButtons = false) {
         if (!doButtons) { return }
         this.actionButton = createButton('Executar função');
@@ -112,6 +114,7 @@ class Blocks {
         }
 
         if (this.dragging) {
+            let hideShadow = true
             for (let otherBlock of this.blocks.slice().reverse()) {
                 if (otherBlock == this.dragging || otherBlock == this.dragging.condicion) {
                     continue;
@@ -143,15 +146,16 @@ class Blocks {
                     }
 
                     if (otherBlock.drop) {
-                        if (mouseY - otherBlock.y > otherBlock.height) {
-                            this.shadowBlock.hide = false
-                            otherBlock.drop(this.shadowBlock, otherBlock.children.length)
-                            break
-                        }
-                        if (mouseY - otherBlock.y > otherBlock.height * 3 / 4) {
+                        if (mouseY - otherBlock.y > otherBlock.height * 3 / 4 && mouseY - otherBlock.y < otherBlock.height) {
                             this.shadowBlock.hide = false
                             otherBlock.drop(this.shadowBlock, 0)
                             break
+                        }
+                        if (mouseY - otherBlock.y > otherBlock.height) {
+                            this.shadowBlock.hide = false
+                            otherBlock.drop(this.shadowBlock, otherBlock.children.length)
+                            hideShadow = false
+                            continue
                         }
                         this.shadowBlock.hide = false
                         otherBlock.drop(this.shadowBlock)
@@ -159,8 +163,10 @@ class Blocks {
                     }
                     break;
                 } else {
-                    if (this.shadowBlock.parent) this.shadowBlock.parent.removeChild(this.shadowBlock)
-                    this.shadowBlock.hide = true
+                    if (hideShadow) {
+                        if (this.shadowBlock.parent) this.shadowBlock.parent.removeChild(this.shadowBlock)
+                        this.shadowBlock.hide = true
+                    }
                 }
             }
         }
@@ -199,13 +205,13 @@ class Blocks {
                 }
 
                 if (otherBlock.drop) {
-                    if (mouseY - otherBlock.y > otherBlock.height) {
-                        otherBlock.drop(this.dragging, otherBlock.children.length)
-                        break
-                    }
-                    if (mouseY - otherBlock.y > otherBlock.height * 3 / 4) {
+                    if (mouseY - otherBlock.y > otherBlock.height * 3 / 4 && mouseY - otherBlock.y < otherBlock.height) {
                         otherBlock.drop(this.dragging, 0)
                         break
+                    }
+                    if (mouseY - otherBlock.y > otherBlock.height) {
+                        otherBlock.drop(this.dragging, otherBlock.children.length)
+                        continue
                     }
                     otherBlock.drop(this.dragging)
                 }
@@ -219,6 +225,11 @@ class Blocks {
     }
 
     async repaint(params) {
+        this.iterations += 1
+        if (this.iterations >= 1000) {
+            print("limite de iterações chegado")
+            return
+        }
         for (let b of this.mainBlock.children) {
             let result = await b.action(params);
             if (result != undefined && result.type == "end") {

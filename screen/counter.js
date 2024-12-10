@@ -9,6 +9,7 @@ class Counter extends Blocks {
         super.setup(true)
 
         this.actionButton.mousePressed(() => {
+            this.iterations = 0
             circles = {}; this.repaint(0);
         });
 
