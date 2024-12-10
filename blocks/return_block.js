@@ -22,6 +22,7 @@ class ReturnBlock extends BaseBlock {
 
         this.width += textWidth(this.label)
         this.labelWidth = textWidth(this.label)
+        this.canDrop = true
     }
 
 
@@ -43,7 +44,7 @@ class ReturnBlock extends BaseBlock {
     }
 
     drop(block) {
-        if (!this.condicion && !(block instanceof FunctionBlock)) { // CONDICION PROBABLY GONNA BREAK IN THE FUTURE !!!
+        if (!this.condicion && (block.constructor === BaseBlock || block.constructor === ShadowBlock)) {
             let x = this.x + this.width - 10;
             let y = this.y + (this.height - block.height) / 2;
             block.place(x, y);
@@ -53,9 +54,7 @@ class ReturnBlock extends BaseBlock {
             this.width += block.width;
             this.condicion = block;
             block.parent = this;
-
-        } else {
-            if (block.isShadow) { block.hide = true }
+            this.canDrop = false
         }
 
     }
@@ -65,14 +64,13 @@ class ReturnBlock extends BaseBlock {
             this.width -= block.width;
             this.condicion = null;
             block.parent = null;
-        }
-        else {
-            super.removeChild(block)
+            this.canDrop = true
         }
     }
 
     display() {
         fill(200);
+        if (this.parent) fill(230)
         rect(this.x, this.y, this.width, this.height);
         fill(0);
         textAlign(CENTER, CENTER);

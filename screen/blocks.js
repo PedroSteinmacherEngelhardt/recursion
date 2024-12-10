@@ -66,11 +66,17 @@ class Blocks {
         this.prevMouseY = mouseY;
     }
 
+    restX = 0
+    restY = 0
+
     mousePressed() {
         for (let block of this.blocks.slice().reverse()) {
             if (block.isMouseInside() && block.canMove) {
                 block.isDragging = true;
                 this.dragging = block;
+                draggingBlock = block
+                this.restX = mouseX - this.dragging.x
+                this.restY = mouseY - this.dragging.y
 
                 if (block.parent) {
                     block.parent.removeChild(block);
@@ -94,8 +100,8 @@ class Blocks {
     mouseDragged() {
         if (this.dragging) {
             this.dragging.move(
-                mouseX - this.dragging.width / 2 - this.dragging.x,
-                mouseY - this.dragging.height / 2 - this.dragging.y
+                mouseX - this.restX - this.dragging.x,
+                mouseY - this.restY - this.dragging.y
             );
         }
         else {
@@ -115,13 +121,45 @@ class Blocks {
                         continue
                     }
                 }
-                if (otherBlock.isMouseInside()) {
+                if (otherBlock.isMouseInside(otherBlock.totalHeight)) {
+                    if (otherBlock.parent) {
+                        let index = otherBlock.parent.children.indexOf(otherBlock)
+                        if (mouseY - otherBlock.y < otherBlock.height / 4) {
+                            this.shadowBlock.hide = false
+                            otherBlock.parent.drop(this.shadowBlock, index)
+                            break
+                        }
+
+                        if (mouseX - otherBlock.x < otherBlock.width / 4) {
+                            this.shadowBlock.hide = false
+                            otherBlock.parent.drop(this.shadowBlock, index + 1)
+                            break
+                        }
+
+                        if (!otherBlock.canDrop) {
+                            this.shadowBlock.hide = false
+                            otherBlock.parent.drop(this.shadowBlock)
+                        }
+                    }
+
                     if (otherBlock.drop) {
+                        if (mouseY - otherBlock.y > otherBlock.height) {
+                            this.shadowBlock.hide = false
+                            otherBlock.drop(this.shadowBlock, otherBlock.children.length)
+                            break
+                        }
+                        if (mouseY - otherBlock.y > otherBlock.height * 3 / 4) {
+                            this.shadowBlock.hide = false
+                            otherBlock.drop(this.shadowBlock, 0)
+                            break
+                        }
                         this.shadowBlock.hide = false
                         otherBlock.drop(this.shadowBlock)
+                        break
                     }
                     break;
                 } else {
+                    if (this.shadowBlock.parent) this.shadowBlock.parent.removeChild(this.shadowBlock)
                     this.shadowBlock.hide = true
                 }
             }
@@ -129,6 +167,7 @@ class Blocks {
     }
 
     mouseReleased() {
+        if (this.shadowBlock.parent) this.shadowBlock.parent.removeChild(this.shadowBlock)
         this.shadowBlock.hide = true
         if (!this.dragging) return;
 
@@ -141,8 +180,33 @@ class Blocks {
                     continue
                 }
             }
-            if (otherBlock.isMouseInside()) {
+            if (otherBlock.isMouseInside(otherBlock.totalHeight)) {
+                if (otherBlock.parent) {
+                    let index = otherBlock.parent.children.indexOf(otherBlock)
+                    if (mouseY - otherBlock.y < otherBlock.height / 4) {
+                        otherBlock.parent.drop(this.dragging, index)
+                        break
+                    }
+
+                    if (mouseX - otherBlock.x < otherBlock.width / 4) {
+                        otherBlock.parent.drop(this.dragging, index + 1)
+                        break
+                    }
+
+                    if (!otherBlock.canDrop) {
+                        otherBlock.parent.drop(this.dragging)
+                    }
+                }
+
                 if (otherBlock.drop) {
+                    if (mouseY - otherBlock.y > otherBlock.height) {
+                        otherBlock.drop(this.dragging, otherBlock.children.length)
+                        break
+                    }
+                    if (mouseY - otherBlock.y > otherBlock.height * 3 / 4) {
+                        otherBlock.drop(this.dragging, 0)
+                        break
+                    }
                     otherBlock.drop(this.dragging)
                 }
                 break;
@@ -151,6 +215,7 @@ class Blocks {
 
         this.dragging.isDragging = false;
         this.dragging = null;
+        draggingBlock = null
     }
 
     async repaint(params) {

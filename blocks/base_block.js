@@ -27,14 +27,15 @@ class BaseBlock {
 
     display() {
         fill(200);
+        if (this.parent) fill(230)
         rect(this.x, this.y, this.width, this.height);
         fill(0);
         textAlign(CENTER, CENTER);
         text(this.label, this.x + this.width / 2, this.y + this.height / 2);
     }
 
-    isMouseInside() {
+    isMouseInside(heightSurplus = 0) {
         return mouseX > this.x && mouseX < this.x + this.width &&
-            mouseY > this.y && mouseY < this.y + this.height;
+            mouseY > this.y && mouseY < this.y + this.height + heightSurplus;
     }
 }

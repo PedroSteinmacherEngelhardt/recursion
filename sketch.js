@@ -39,6 +39,7 @@ function mouseReleased() {
   if (isInsedeDisplayCnv()) return
   if (currentScreen && currentScreen.mouseReleased)
     currentScreen.mouseReleased();
+  draggingBlock = null
   return;
 }
 
@@ -49,6 +50,8 @@ function touchEnded() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
+
+draggingBlock = null
 
 
 const startMenu = document.getElementById('menu')

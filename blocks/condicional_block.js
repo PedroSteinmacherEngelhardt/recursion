@@ -21,6 +21,7 @@ class CondicionalBlock extends FunctionBlock {
 
         this.width += textWidth(this.label)
         this.labelWidth = textWidth(this.label)
+        this.canDrop = true
     }
 
     place(x, y) {
@@ -40,19 +41,21 @@ class CondicionalBlock extends FunctionBlock {
         super.move(x, y)
     }
 
-    drop(block) {
-        if (!this.condicion && !(block instanceof FunctionBlock)) { // CONDICION PROBABLY GONNA BREAK IN THE FUTURE !!!
+    drop(block, index) {
+        if (block.parent) {
+            block.parent.removeChild(block)
+        }
+        if (!this.condicion && (block.constructor === BaseBlock || (block.constructor === ShadowBlock && draggingBlock.constructor === BaseBlock))) {
             let x = this.x + this.width - 10; // - 10 de margem
             let y = this.y + (this.height - block.height) / 2;
             block.place(x, y);
 
-            if (block.isShadow) { return }
             this.width += block.width;
             this.condicion = block;
             block.parent = this;
 
         } else {
-            super.drop(block)
+            super.drop(block, index)
         }
 
     }
@@ -70,6 +73,7 @@ class CondicionalBlock extends FunctionBlock {
 
     display() {
         fill(200);
+        if (this.parent) fill(230)
         rect(this.x, this.y, this.width, this.height);
         fill(0);
         text(this.label, this.x + this.labelWidth, this.y + this.height / 2);

@@ -3,6 +3,8 @@ class FunctionBlock extends BaseBlock {
         super(x, y, w, h, label, canMove, action);
 
         this.children = [];
+        this.childrenOffset = 30
+        this.canDrop = true
     }
 
     get totalHeight() {
@@ -30,14 +32,17 @@ class FunctionBlock extends BaseBlock {
         super.move(x, y);
     }
 
-    drop(block) {
-        if (block.isShadow) {
-            let x = this.x + 10;
+    drop(block, index = this.children.length) {
+        if (block.parent) {
+            block.parent.removeChild(block)
+        }
+        /* if (block.isShadow) {
+            let x = this.x + this.childrenOffset;
             let y = this.y + this.totalHeight;
             block.place(x, y)
             return
-        }
-        this.children.push(block);
+        } */
+        this.children.splice(index, 0, block);
         this.repositionChildren()
         block.parent = this
     }
@@ -45,7 +50,7 @@ class FunctionBlock extends BaseBlock {
     repositionChildren() {
         let totalHeight = 0;
         for (let i = 0; i < this.children.length; i++) {
-            let x = this.x + 10;
+            let x = this.x + this.childrenOffset;
             let y = this.y + this.height + totalHeight;
             this.children[i].place(x, y)
             totalHeight += this.children[i].totalHeight;
@@ -71,9 +76,5 @@ class FunctionBlock extends BaseBlock {
         fill(0);
         textAlign(CENTER, CENTER);
         text(this.label, this.x + this.width / 2, this.y + this.height / 2);
-    }
-
-    isMouseInside() {
-        return super.isMouseInside()
     }
 }

@@ -20,6 +20,7 @@ class LoopBlock extends FunctionBlock {
 
     display() {
         fill(200);
+        if (this.parent) fill(230)
         rect(this.x, this.y, this.width, this.height);
         fill(0);
         textAlign(CENTER, CENTER);
