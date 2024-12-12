@@ -116,6 +116,7 @@ class Blocks {
         if (this.dragging) {
             let hideShadow = true
             for (let otherBlock of this.blocks.slice().reverse()) {
+                if (!this.shadowBlock.hide && this.shadowBlock.isMouseInside()) break
                 if (otherBlock == this.dragging || otherBlock == this.dragging.condicion) {
                     continue;
                 }
@@ -133,7 +134,7 @@ class Blocks {
                             break
                         }
 
-                        if (mouseX - otherBlock.x < otherBlock.width / 4) {
+                        if (mouseX - otherBlock.x < 30) {
                             this.shadowBlock.hide = false
                             otherBlock.parent.drop(this.shadowBlock, index + 1)
                             break
@@ -141,7 +142,8 @@ class Blocks {
 
                         if (!otherBlock.canDrop) {
                             this.shadowBlock.hide = false
-                            otherBlock.parent.drop(this.shadowBlock)
+                            otherBlock.parent.drop(this.shadowBlock, index + 1)
+                            break
                         }
                     }
 
@@ -152,11 +154,24 @@ class Blocks {
                             break
                         }
                         if (mouseY - otherBlock.y > otherBlock.height) {
+                            let index = otherBlock.children.length
+                            let h = 0
+                            const mouseHeight = mouseY - otherBlock.y - otherBlock.height
+
+                            for (const i in otherBlock.children) {
+                                if (mouseHeight <= otherBlock.children[i].totalHeight + h) {
+                                    index = i
+                                    break
+                                }
+                                h += otherBlock.children[i].totalHeight
+                            }
+
                             this.shadowBlock.hide = false
-                            otherBlock.drop(this.shadowBlock, otherBlock.children.length)
+                            otherBlock.drop(this.shadowBlock, index)
                             hideShadow = false
                             continue
                         }
+
                         this.shadowBlock.hide = false
                         otherBlock.drop(this.shadowBlock)
                         break
@@ -165,59 +180,31 @@ class Blocks {
                 } else {
                     if (hideShadow) {
                         if (this.shadowBlock.parent) this.shadowBlock.parent.removeChild(this.shadowBlock)
+                        this.shadowBlock.parent = null
                         this.shadowBlock.hide = true
                     }
                 }
+            }
+
+            if (!this.shadowBlock.parent) {
+                this.shadowBlock.hide = true
             }
         }
     }
 
     mouseReleased() {
-        if (this.shadowBlock.parent) this.shadowBlock.parent.removeChild(this.shadowBlock)
-        this.shadowBlock.hide = true
         if (!this.dragging) return;
 
-        for (let otherBlock of this.blocks.slice().reverse()) {
-            if (otherBlock == this.dragging || otherBlock == this.dragging.condicion) {
-                continue;
-            }
-            if (otherBlock.parent) {
-                if (otherBlock == otherBlock.parent.condicion) {
-                    continue
-                }
-            }
-            if (otherBlock.isMouseInside(otherBlock.totalHeight)) {
-                if (otherBlock.parent) {
-                    let index = otherBlock.parent.children.indexOf(otherBlock)
-                    if (mouseY - otherBlock.y < otherBlock.height / 4) {
-                        otherBlock.parent.drop(this.dragging, index)
-                        break
-                    }
-
-                    if (mouseX - otherBlock.x < otherBlock.width / 4) {
-                        otherBlock.parent.drop(this.dragging, index + 1)
-                        break
-                    }
-
-                    if (!otherBlock.canDrop) {
-                        otherBlock.parent.drop(this.dragging)
-                    }
-                }
-
-                if (otherBlock.drop) {
-                    if (mouseY - otherBlock.y > otherBlock.height * 3 / 4 && mouseY - otherBlock.y < otherBlock.height) {
-                        otherBlock.drop(this.dragging, 0)
-                        break
-                    }
-                    if (mouseY - otherBlock.y > otherBlock.height) {
-                        otherBlock.drop(this.dragging, otherBlock.children.length)
-                        continue
-                    }
-                    otherBlock.drop(this.dragging)
-                }
-                break;
-            }
+        if (!this.shadowBlock.hide && this.shadowBlock.parent) {
+            this.dragging.parent = this.shadowBlock.parent
+            let index = 0
+            if (this.shadowBlock.parent.children) index = this.shadowBlock.parent.children.indexOf(this.shadowBlock)
+            if (this.shadowBlock.parent) this.shadowBlock.parent.removeChild(this.shadowBlock)
+            this.shadowBlock.parent = null
+            this.shadowBlock.hide = true
+            this.dragging.parent.drop(this.dragging, index)
         }
+
 
         this.dragging.isDragging = false;
         this.dragging = null;
@@ -226,7 +213,8 @@ class Blocks {
 
     async repaint(params) {
         this.iterations += 1
-        if (this.iterations >= 1000) {
+        if (this.iterations >= 500) {
+            circles = {};
             print("limite de iterações chegado")
             return
         }

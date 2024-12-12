@@ -8,6 +8,7 @@ class ShadowBlock extends BaseBlock {
         this.parent;
         this.hide = true
         this.isShadow = true
+        this.action = () => { }
     }
 
     display() {
@@ -15,7 +16,4 @@ class ShadowBlock extends BaseBlock {
         rect(this.x, this.y, this.width, this.height);
     }
 
-    isMouseInside(_) {
-        return false;
-    }
 }

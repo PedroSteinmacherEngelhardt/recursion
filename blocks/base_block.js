@@ -11,6 +11,8 @@ class BaseBlock {
         this.parent;
 
         this.width += textWidth(this.label);
+
+        this.width = max(this.width, 70)
     }
 
     get totalHeight() { return this.height };

@@ -32,16 +32,10 @@ class FunctionBlock extends BaseBlock {
         super.move(x, y);
     }
 
-    drop(block, index = this.children.length) {
+    drop(block, index = 0) {
         if (block.parent) {
             block.parent.removeChild(block)
         }
-        /* if (block.isShadow) {
-            let x = this.x + this.childrenOffset;
-            let y = this.y + this.totalHeight;
-            block.place(x, y)
-            return
-        } */
         this.children.splice(index, 0, block);
         this.repositionChildren()
         block.parent = this

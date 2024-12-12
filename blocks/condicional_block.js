@@ -45,7 +45,7 @@ class CondicionalBlock extends FunctionBlock {
         if (block.parent) {
             block.parent.removeChild(block)
         }
-        if (!this.condicion && (block.constructor === BaseBlock || (block.constructor === ShadowBlock && draggingBlock.constructor === BaseBlock))) {
+        if ((!this.condicion || this.condicion.constructor === ShadowBlock) && (block.constructor === BaseBlock || (block.constructor === ShadowBlock && draggingBlock.constructor === BaseBlock))) {
             let x = this.x + this.width - 10; // - 10 de margem
             let y = this.y + (this.height - block.height) / 2;
             block.place(x, y);
