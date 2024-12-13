@@ -1,5 +1,12 @@
 # Recursão em Foco
 
+---
+
+##Acesse o jogo
+https://pedrosteinmacherengelhardt.github.io/recursion/
+
+---
+
 ## Sobre o Projeto
 O **Recursão em Foco** é um jogo interativo desenvolvido para ensinar os fundamentos da recursão de forma visual e prática. Inspirado em ferramentas como Scratch, ele permite que jogadores criem algoritmos recursivos usando blocos de código e visualizem a execução por meio de uma árvore interativa de chamadas de função.
 
@@ -34,10 +41,3 @@ O objetivo principal do projeto é desmistificar a recursão, um conceito desafi
 2. Visualização fluida e responsiva, permitindo zoom e exploração na árvore de chamadas.
 3. Disponibilidade via navegador (compatível com Chrome, Firefox e Edge).
 4. Desempenho eficiente.
-
----
-
-## Deploy
-
-#Acesse o jogo
-https://pedrosteinmacherengelhardt.github.io/recursion/
