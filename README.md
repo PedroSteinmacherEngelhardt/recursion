@@ -1,8 +1,6 @@
 # Recursão em Foco
 
----
-
-##Acesse o jogo
+## Acesse o jogo
 https://pedrosteinmacherengelhardt.github.io/recursion/
 
 ---
