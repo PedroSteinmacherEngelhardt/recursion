@@ -173,6 +173,8 @@ function sketch1(p) {
 }
 
 window.addEventListener("wheel", function (e) {
+    if (!isInsedeDisplayCnv()) return
+
     if (e.deltaY < 0)
         sf *= 1.05;
     else
