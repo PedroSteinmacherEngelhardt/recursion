@@ -1,3 +1,5 @@
+let sf = 0.5
+
 async function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   setScreen(new Blocks, false)
@@ -7,6 +9,7 @@ async function setup() {
 }
 
 function draw() {
+  scale(sf);
   if (currentScreen && currentScreen.draw)
     currentScreen.draw();
   return;

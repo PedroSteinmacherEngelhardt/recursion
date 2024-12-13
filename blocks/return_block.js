@@ -103,9 +103,4 @@ class ReturnBlock extends BaseBlock {
         textAlign(CENTER, CENTER);
         text(this.label, this.x + this.labelWidth, this.y + this.height / 2);
     }
-
-    isMouseInside() {
-        return mouseX > this.x && mouseX < this.x + this.width &&
-            mouseY > this.y && mouseY < this.y + this.height;
-    }
 }

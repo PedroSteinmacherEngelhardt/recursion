@@ -2,6 +2,7 @@ let circles = {}
 let dragging
 
 const diametro = 40
+const CollisionFactor = 80
 const k = 0.05
 const restLength = 200
 const curveLimit = 40
@@ -16,7 +17,7 @@ let showDisplayCanvas = false
 let lastMousePos
 let offset
 let canvasOffset
-let sf = 0.5
+let displaySf = 0.5
 
 let selected = null
 
@@ -55,7 +56,7 @@ function sketch1(p) {
             return
         }
         p.background(220);
-        p.scale(sf);
+        p.scale(displaySf);
         p.translate(offset.x, offset.y)
 
         if (dragging) {
@@ -90,7 +91,7 @@ function sketch1(p) {
         for (const [_, c] of Object.entries(circles)) {
             for (const [_, otherC] of Object.entries(circles)) {
                 const d = p5.Vector.sub(c.pos, otherC.pos)
-                if (d.mag() < 80) {
+                if (d.mag() < CollisionFactor) {
                     d.normalize().mult(1)
                     c.velocity.add(d)
                     otherC.velocity.add(d.mult(-1))
@@ -137,7 +138,7 @@ function sketch1(p) {
 
     p.mousePressed = function (event) {
         if (!isInsedeDisplayCnv()) return
-        const click = p.createVector(event.x, event.y).sub(canvasOffset).div(sf).sub(offset)
+        const click = p.createVector(event.x, event.y).sub(canvasOffset).div(displaySf).sub(offset)
 
         for (const [index, c] of Object.entries(circles).reverse()) {
             if (isInsideCircle(c.pos, click)) {
@@ -155,7 +156,7 @@ function sketch1(p) {
 
     p.mouseDragged = function (event) {
         if (!isInsedeDisplayCnv()) return
-        const click = p.createVector(event.x, event.y).sub(canvasOffset).div(sf).sub(offset)
+        const click = p.createVector(event.x, event.y).sub(canvasOffset).div(displaySf).sub(offset)
 
         if (dragging) {
             dragging.circle.pos = click
@@ -173,12 +174,18 @@ function sketch1(p) {
 }
 
 window.addEventListener("wheel", function (e) {
-    if (!isInsedeDisplayCnv()) return
+    if (isInsedeDisplayCnv()) {
+        if (e.deltaY < 0)
+            displaySf *= 1.05;
+        else
+            displaySf *= 0.95;
+    } else {
+        if (e.deltaY < 0)
+            sf *= 1.05;
+        else
+            sf *= 0.95;
 
-    if (e.deltaY < 0)
-        sf *= 1.05;
-    else
-        sf *= 0.95;
+    }
 });
 
 sleep(100).then(() => new p5(sketch1))

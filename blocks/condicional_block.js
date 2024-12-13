@@ -101,18 +101,4 @@ class CondicionalBlock extends FunctionBlock {
         fill(0);
         text(this.label, this.x + this.labelWidth + 30, this.y + this.height / 2);
     }
-
-    isMouseInside() {
-        return mouseX > this.x && mouseX < this.x + this.width &&
-            mouseY > this.y && mouseY < this.y + this.height;
-    }
 }
-
-/* else {
-    vertex(this.x + 70, this.y + this.totalHeightheight); // Start of the bottom outward indent
-    vertex(this.x + 50, this.y + this.totalHeightheight + 30); // Bottom outward indent peak
-    vertex(this.x + 30, this.y + this.totalHeightheight); // End of the bottom outward indent
-
-    vertex(this.x, this.y + this.totalHeightheight);  // Bottom-left corner
-}
- */

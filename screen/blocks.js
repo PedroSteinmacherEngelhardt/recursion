@@ -46,9 +46,7 @@ class Blocks {
             if (this.dragging.condicion) {
                 this.dragging.condicion.display()
             }
-            if (this.dragging.children) {
-                for (const b of this.dragging.children) { b.display() }
-            }
+            this.displayWhileDragging(this.dragging)
         }
 
         cursor(ARROW);
@@ -64,21 +62,36 @@ class Blocks {
         }
 
 
-        this.prevMouseX = mouseX;
-        this.prevMouseY = mouseY;
+        this.prevMouseX = mouseX / sf;
+        this.prevMouseY = mouseY / sf;
+    }
+
+    displayWhileDragging(block) {
+        if (!block.children) return
+        for (const b of block.children) {
+            b.display()
+            if (b.condicion) {
+                b.condicion.display()
+            }
+
+            if (b.children && b.children.length > 0) {
+                this.displayWhileDragging(b)
+            }
+        }
     }
 
     restX = 0
     restY = 0
 
     mousePressed() {
+        const click = createVector(mouseX, mouseY).div(sf)
         for (let block of this.blocks.slice().reverse()) {
             if (block.isMouseInside() && block.canMove) {
                 block.isDragging = true;
                 this.dragging = block;
                 draggingBlock = block
-                this.restX = mouseX - this.dragging.x
-                this.restY = mouseY - this.dragging.y
+                this.restX = click.x - this.dragging.x
+                this.restY = click.y - this.dragging.y
 
                 if (block.parent) {
                     block.parent.removeChild(block);
@@ -94,33 +107,42 @@ class Blocks {
                     this.blocks.push(block.condicion);
                 }
                 if (!block.children) break
-                for (const b of block.children) {
-                    let index = this.blocks.indexOf(b);
-                    this.blocks.splice(index, 1);
-                    this.blocks.push(b);
-                    if (b.condicion) {
-                        let index = this.blocks.indexOf(b.condicion);
-                        this.blocks.splice(index, 1);
-                        this.blocks.push(b.condicion);
-                    }
-                }
+                this.displayOnTop(block)
 
                 break;
             }
         }
     }
 
+    displayOnTop(block) {
+        for (const b of block.children) {
+            let index = this.blocks.indexOf(b);
+            this.blocks.splice(index, 1);
+            this.blocks.push(b);
+            if (b.condicion) {
+                let index = this.blocks.indexOf(b.condicion);
+                this.blocks.splice(index, 1);
+                this.blocks.push(b.condicion);
+            }
+
+            if (b.children && b.children.length > 0) {
+                this.displayOnTop(b)
+            }
+        }
+    }
+
     mouseDragged() {
+        const click = createVector(mouseX, mouseY).div(sf)
         if (this.dragging) {
             this.dragging.move(
-                mouseX - this.restX - this.dragging.x,
-                mouseY - this.restY - this.dragging.y
+                click.x - this.restX - this.dragging.x,
+                click.y - this.restY - this.dragging.y
             );
         }
         else {
             for (let block of this.blocks) {
-                block.x -= this.prevMouseX - mouseX
-                block.y -= this.prevMouseY - mouseY
+                block.x -= this.prevMouseX - click.x
+                block.y -= this.prevMouseY - click.y
             }
         }
 
@@ -139,13 +161,13 @@ class Blocks {
                 if (otherBlock.isMouseInside(otherBlock.totalHeight)) {
                     if (otherBlock.parent) {
                         let index = otherBlock.parent.children.indexOf(otherBlock)
-                        if (mouseY - otherBlock.y < otherBlock.height / 4) {
+                        if (click.y - otherBlock.y < otherBlock.height / 4) {
                             this.shadowBlock.hide = false
                             otherBlock.parent.drop(this.shadowBlock, index)
                             break
                         }
 
-                        if (mouseX - otherBlock.x < 30) {
+                        if (click.x - otherBlock.x < 30) {
                             this.shadowBlock.hide = false
                             otherBlock.parent.drop(this.shadowBlock, index + 1)
                             break
@@ -154,21 +176,22 @@ class Blocks {
                         if (!otherBlock.canDrop) {
                             this.shadowBlock.hide = false
                             otherBlock.parent.drop(this.shadowBlock, index + 1)
-                            print("a")
                             break
                         }
                     }
 
                     if (otherBlock.drop) {
-                        if (mouseY - otherBlock.y > otherBlock.height * 3 / 4 && mouseY - otherBlock.y < otherBlock.height) {
+                        if (click.y - otherBlock.y > otherBlock.height * 3 / 4 && click.y - otherBlock.y < otherBlock.height) {
                             this.shadowBlock.hide = false
                             otherBlock.drop(this.shadowBlock, 0)
                             break
                         }
-                        if (mouseY - otherBlock.y > otherBlock.height) {
-                            let index = otherBlock.children.length
+                        if (click.y - otherBlock.y > otherBlock.height) {
+                            let index = 0
+                            if (otherBlock.children)
+                                index = otherBlock.children.length
                             let h = 0
-                            const mouseHeight = mouseY - otherBlock.y - otherBlock.height
+                            const mouseHeight = click.y - otherBlock.y - otherBlock.height
 
                             for (const i in otherBlock.children) {
                                 if (mouseHeight <= (otherBlock.children[i].totalHeight / 2) + h) {

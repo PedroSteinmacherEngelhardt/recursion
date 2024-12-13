@@ -59,7 +59,8 @@ class BaseBlock {
     }
 
     isMouseInside(heightSurplus = 0) {
-        return mouseX > this.x && mouseX < this.x + this.width &&
-            mouseY > this.y && mouseY < this.y + this.height + heightSurplus;
+        const click = createVector(mouseX, mouseY).div(sf)
+        return click.x > this.x && click.x < this.x + this.width &&
+            click.y > this.y && click.y < this.y + this.height + heightSurplus;
     }
 }

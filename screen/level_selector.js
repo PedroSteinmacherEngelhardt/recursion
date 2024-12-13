@@ -6,7 +6,8 @@ class LevelSelector {
     angle = 360 / this.symmetry;
 
     draw() {
-        translate(window.innerWidth / 2, window.innerHeight / 2);
+        scale(1)
+        translate(window.innerWidth / 2 / sf, window.innerHeight / 2 / sf);
         if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
 
             let lineStartX = mouseX - width / 2;
