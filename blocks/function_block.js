@@ -3,7 +3,7 @@ class FunctionBlock extends BaseBlock {
         super(x, y, w, h, label, canMove, action);
 
         this.children = [];
-        this.childrenOffset = 30
+        this.childrenOffset = 40
         this.canDrop = true
     }
 
@@ -66,7 +66,18 @@ class FunctionBlock extends BaseBlock {
 
     display() {
         fill(250, 40, 40);
-        rect(this.x, this.y, this.width, this.height);
+
+        beginShape();
+        vertex(this.x, this.y);  // Top-left corner
+
+        vertex(this.x + this.width, this.y); // Top-right corner
+        vertex(this.x + this.width, this.y + this.height); // Bottom-right corner
+        vertex(this.x + 110, this.y + this.height); // Start of the bottom outward indent
+        vertex(this.x + 90, this.y + this.height + 30); // Bottom outward indent peak
+        vertex(this.x + 70, this.y + this.height); // End of the bottom outward indent
+        vertex(this.x, this.y + this.height);  // Bottom-left corner
+        endShape(CLOSE);
+
         fill(0);
         textAlign(CENTER, CENTER);
         text(this.label, this.x + this.width / 2, this.y + this.height / 2);

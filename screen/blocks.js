@@ -93,6 +93,17 @@ class Blocks {
                     this.blocks.splice(index, 1);
                     this.blocks.push(block.condicion);
                 }
+                if (!block.children) break
+                for (const b of block.children) {
+                    let index = this.blocks.indexOf(b);
+                    this.blocks.splice(index, 1);
+                    this.blocks.push(b);
+                    if (b.condicion) {
+                        let index = this.blocks.indexOf(b.condicion);
+                        this.blocks.splice(index, 1);
+                        this.blocks.push(b.condicion);
+                    }
+                }
 
                 break;
             }
@@ -143,6 +154,7 @@ class Blocks {
                         if (!otherBlock.canDrop) {
                             this.shadowBlock.hide = false
                             otherBlock.parent.drop(this.shadowBlock, index + 1)
+                            print("a")
                             break
                         }
                     }
@@ -159,7 +171,7 @@ class Blocks {
                             const mouseHeight = mouseY - otherBlock.y - otherBlock.height
 
                             for (const i in otherBlock.children) {
-                                if (mouseHeight <= otherBlock.children[i].totalHeight + h) {
+                                if (mouseHeight <= (otherBlock.children[i].totalHeight / 2) + h) {
                                     index = i
                                     break
                                 }
